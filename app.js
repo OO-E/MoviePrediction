@@ -4,12 +4,29 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var mongoose = require("mongoose");
+
+
+
 
 var index = require('./routes/index');
 var users = require('./routes/users');
+var filmRouter = require('./routes/filmRouter');
+
+
+
+
 
 var app = express();
 
+
+mongoose.connect("mongodb://localhost:27017/admin");
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function () {
+    // we're connected!
+    console.log("Connected correctly to server");
+});
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
@@ -24,6 +41,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);
 app.use('/users', users);
+app.use('/films',filmRouter);
+
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -44,12 +64,12 @@ app.use(function(err, req, res, next) {
 });
 
 module.exports = app;
-
-app.listen(8081,function(){
+/*
+app.listen(3000,function(){
 
 console.log("Express open");
 
 })
-
+*/
 
 
