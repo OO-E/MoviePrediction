@@ -7,12 +7,34 @@
 
 var request = require('request'); // İstek yapmak için kullanılacak paket.
 var cheerio = require('cheerio'); // Getirilen veriyi parçalamak için kullanılacak paket.
-
-
+var film = require('./Model/film');
+var botSetting = require('./Model/botSetting');
 
 var count = 0;
 
-function getData(startYear,maxYear,page) {
+var getID = function getData(startYear,maxYear,page) {
+
+    botSetting.find({},function (err,bot) {
+
+        if(err) throw  err
+
+        if(bot.length == 0){
+
+            var bs = new botSetting({maxYear:maxYear,startYear:startYear,page:page});
+            bs.save();
+
+        }else{
+
+            bot[0].maxYear = maxYear;
+            bot[0].startYear = startYear;
+            bot[0].page = page;
+            bot[0].save();
+
+
+        }
+
+
+    });
 
     var url = 'http://www.imdb.com/search/title?sort=moviemeter,asc&title_type=documentary&year='+startYear+'&page='+page+'&ref_=adv_nxt';
 
@@ -26,13 +48,21 @@ function getData(startYear,maxYear,page) {
 
             var $ = cheerio.load(html);
 
-            /* $('div.ribbonize').each(function(i, element){
 
-             // console.log($(this).attr('data-tconst'));
-             });*/
             var lenght = $('div.ribbonize').length
             if(lenght != 0){
 
+                 $('div.ribbonize').each(function(i, element){
+
+                     $id = $(this).attr('data-tconst');
+                     var flm = new film({sql_Id:$id});
+                     flm.save(function (err) {
+                         if(err) throw err;
+                     });
+
+
+
+                 });
                 console.log("page "+page);
                 count = count + lenght;
                 page = page + 1;
@@ -43,7 +73,7 @@ function getData(startYear,maxYear,page) {
 
                 if(startYear <= maxYear){
                     page = 1;
-                    getData(startYear,maxYear,page)
+                    getData(startYear,maxYear,page);
 
                     console.log("Bu yılda "+ startYear +" toplam " + count + " data oldu ");
 
@@ -56,6 +86,13 @@ function getData(startYear,maxYear,page) {
 
             }
 
+        }else{
+            startYear = startYear + 1;
+            page = 1
+            getData(startYear,maxYear,page);
+            console.log("Bu yılda "+ startYear +" toplam " + count + " data oldu ");
+
+
         }
     });
 
@@ -63,7 +100,8 @@ function getData(startYear,maxYear,page) {
 
 }
 
+//getData(1910,2018,1);
 
 
-//getData(1910,1910,1);
 
+exports.getID = getID;

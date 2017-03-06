@@ -6,24 +6,40 @@
 var express = require('express');
 var filmRouter = express.Router();
 var films = require("../Model/film");
-
+var bot = require("../Model/botSetting");
+var ttt = require("../test");
 /* GET home page. */
 filmRouter.get('/', function(req, res, next) {
 
 
-    var ss = new films({name:"deneme",sql_Id:"tt123123adas"});
-    
-    ss.save(function (error) {
-        if(error){
+    res.render('index', { title: 'Express' });
 
-            console.log(error);
+});
+
+
+filmRouter.get('/bot',function (req,res,next) {
+
+
+
+    bot.find({},function (err,obj) {
+
+        if(obj.length == 0){
+
+            ttt.getID(1910,2018,0);
+
         }else{
-            console.log("oldu");
+            $page = parseInt(obj[0].page);
+            $startY = parseInt(obj[0].startYear);
+            $maxY = parseInt(obj[0].maxYear);
+            ttt.getID($startY,$maxY,$page);
 
         }
-    })
 
-    res.render('index', { title: 'Express' });
+    });
+
+
+
+        res.json({"OK":"OK"});
 
 });
 
