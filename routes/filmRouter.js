@@ -6,8 +6,8 @@
 var express = require('express');
 var filmRouter = express.Router();
 var films = require("../Model/film");
-var bot = require("../Model/botSetting");
-var ttt = require("../test");
+var botS = require("../Model/botSetting");
+var bot = require("../bot");
 /* GET home page. */
 filmRouter.get('/', function(req, res, next) {
 
@@ -21,17 +21,17 @@ filmRouter.get('/bot',function (req,res,next) {
 
 
 
-    bot.find({},function (err,obj) {
+    botS.find({},function (err,obj) {
 
         if(obj.length == 0){
 
-            ttt.getID(1910,2018,0);
+            bot.getID(1910,2018,0);
 
         }else{
             $page = parseInt(obj[0].page);
             $startY = parseInt(obj[0].startYear);
             $maxY = parseInt(obj[0].maxYear);
-            ttt.getID($startY,$maxY,$page);
+            bot.getID($startY,$maxY,$page);
 
         }
 
@@ -40,6 +40,16 @@ filmRouter.get('/bot',function (req,res,next) {
 
 
         res.json({"OK":"OK"});
+
+});
+
+filmRouter.get("/bot/film",function (req,res,next) {
+
+
+    bot.getFilmDetail("tt0137523");
+
+    res.json({"OK":"OK"});
+
 
 });
 

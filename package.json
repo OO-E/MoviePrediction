@@ -16,6 +16,8 @@
     "curl":"=0.1.4 ",
     "cheerio":"=0.22.0",
     "request":"=2.79.0",
-    "mongoose":"4.8.5"
+    "mongoose":"4.8.5",
+    "imdb":"1.1.0",
+    "imdb-search":"0.1.5"
   }
 }

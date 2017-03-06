@@ -5,10 +5,11 @@
  */
 
 
-var request = require('request'); // İstek yapmak için kullanılacak paket.
-var cheerio = require('cheerio'); // Getirilen veriyi parçalamak için kullanılacak paket.
-var film = require('./Model/film');
-var botSetting = require('./Model/botSetting');
+var request             = require('request'); // İstek yapmak için kullanılacak paket.
+var cheerio             = require('cheerio'); // Getirilen veriyi parçalamak için kullanılacak paket.
+var film                = require('./Model/film');
+var botSetting          = require('./Model/botSetting');
+
 
 var count = 0;
 
@@ -100,8 +101,33 @@ var getID = function getData(startYear,maxYear,page) {
 
 }
 
-//getData(1910,2018,1);
+
+var getFilmDetail = function(imdb_ID){
 
 
+/*
+    var imdb = require('imdb');
 
-exports.getID = getID;
+    imdb(imdb_ID, function(err, data) {
+        if(err)
+            console.log(err.stack);
+
+        if(data)
+            console.log(data);
+    });
+*/
+
+    const imdb = require('imdb-search');
+    imdb.get(imdb_ID)
+        .then((movie) => {
+            console.log(movie);
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+
+}
+
+
+exports.getID           = getID;
+exports.getFilmDetail   = getFilmDetail;
