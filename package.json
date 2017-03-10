@@ -18,6 +18,7 @@
     "request":"=2.79.0",
     "mongoose":"4.8.5",
     "imdb":"1.1.0",
-    "imdb-search":"0.1.5"
+    "imdb-search":"0.1.5",
+    "mongoose-paginate":"5.0.3"
   }
 }

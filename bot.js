@@ -102,32 +102,87 @@ var getID = function getData(startYear,maxYear,page) {
 }
 
 
-var getFilmDetail = function(imdb_ID){
+var getFilmDetail = function(page){
 
 
-/*
-    var imdb = require('imdb');
+    film.paginate({}, { page: page, limit: 1 }, function(err, result) {
 
-    imdb(imdb_ID, function(err, data) {
-        if(err)
-            console.log(err.stack);
+        if(result['docs'].length>0){
 
-        if(data)
-            console.log(data);
+
+            var id = result["docs"][0]["sql_Id"]
+            const imdb = require('imdb-search');
+            imdb.get(id)
+                .then((movie) => {
+
+                film.find({sql_Id:id},function (err,filmOne) {
+                    if(err) throw err
+
+                    if(filmOne.length != 0){
+
+                        console.log(filmOne);
+                        filmOne[0].type         = movie["type"];
+                        filmOne[0].awards       = movie["awards"];
+                        filmOne[0].metacritic   = movie["metacritic"];
+                        filmOne[0].tomato       = movie["tomato"];
+                        filmOne[0].rating       = movie["imdb"]["rating"];
+                        filmOne[0].votes        = movie["imdb"]["votes"]
+                        filmOne[0].poster       = movie["poster"];
+                        filmOne[0].plot         = movie["plot"];
+                        filmOne[0].actors       = movie["actors"];
+                        filmOne[0].writers      = movie["writers"];
+                        filmOne[0].director     = movie["director"];
+                        filmOne[0].genres       = movie["genres"];
+                        filmOne[0].countries    = movie["countries"];
+                        filmOne[0].runtime      = movie["runtime"];
+                        filmOne[0].released     = movie["released"];
+                        filmOne[0].episode      = movie["episode"];
+                        filmOne[0].season       = movie["season"];
+                        filmOne[0].rated        = movie["rated"];
+                        filmOne[0].year         = movie["year"];
+                        filmOne[0].title        = movie["title"];
+                        filmOne[0].save();
+                        console.log("film kayıt edildi");
+
+                    }else{
+                        console.log("film gelmedi");
+
+                    }
+
+                    });
+
+                            console.log(movie);
+
+
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+
+
+        }else{
+
+            console.log("docs 0 geldi");
+        }
+
+
+
+
+
+        console.log(result['docs'][0]['sql_Id']);
     });
-*/
 
-    const imdb = require('imdb-search');
-    imdb.get(imdb_ID)
-        .then((movie) => {
-            console.log(movie);
-        })
-        .catch((err) => {
-            console.log(err);
-        });
+
+
 
 }
+/*
+__v: 0 } ],
+total: 195332,
+    limit: 10,
+    page: 3,
+    pages: 19534 }
 
-
+*/
 exports.getID           = getID;
 exports.getFilmDetail   = getFilmDetail;

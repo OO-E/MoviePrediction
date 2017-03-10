@@ -46,7 +46,7 @@ filmRouter.get('/bot',function (req,res,next) {
 filmRouter.get("/bot/film",function (req,res,next) {
 
 
-    bot.getFilmDetail("tt0137523");
+    bot.getFilmDetail(1);
 
     res.json({"OK":"OK"});
 
