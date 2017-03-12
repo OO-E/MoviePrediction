@@ -1,6 +1,8 @@
 /**
- * Created by ozgun on 5.03.2017.
+ * Created by ozgun on 12.03.2017.
  */
+
+
 
 
 
@@ -9,14 +11,6 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var botSchema = new Schema({
-
-    startYear:{
-        type:String
-
-    },
-    maxYear:{
-        type:String
-    },
     page:{
         type:String
     }
@@ -25,4 +19,4 @@ var botSchema = new Schema({
 
 
 
-module.exports = mongoose.model('botsetting', botSchema);
+module.exports = mongoose.model('botfilmsetting', botSchema);

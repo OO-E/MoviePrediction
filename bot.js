@@ -9,8 +9,7 @@ var request             = require('request'); // İstek yapmak için kullanılac
 var cheerio             = require('cheerio'); // Getirilen veriyi parçalamak için kullanılacak paket.
 var film                = require('./Model/film');
 var botSetting          = require('./Model/botSetting');
-
-
+var botFilmSetting      = require('./Model/botFilmSetting');
 var count = 0;
 
 var getID = function getData(startYear,maxYear,page) {
@@ -107,6 +106,24 @@ var getFilmDetail = function(page){
 
     film.paginate({}, { page: page, limit: 1 }, function(err, result) {
 
+        botFilmSetting.find({},function (err,bot) {
+
+            if(err) throw  err
+
+            if(bot.length == 0){
+
+                var bfs = new botFilmSetting({page:page});
+                bfs.save();
+
+            }else{
+                bot[0].page = page;
+                bot[0].save();
+            }
+
+
+        });
+
+        var total_Pages = result['total'];
         if(result['docs'].length>0){
 
 
@@ -120,7 +137,6 @@ var getFilmDetail = function(page){
 
                     if(filmOne.length != 0){
 
-                        console.log(filmOne);
                         filmOne[0].type         = movie["type"];
                         filmOne[0].awards       = movie["awards"];
                         filmOne[0].metacritic   = movie["metacritic"];
@@ -142,34 +158,34 @@ var getFilmDetail = function(page){
                         filmOne[0].year         = movie["year"];
                         filmOne[0].title        = movie["title"];
                         filmOne[0].save();
-                        console.log("film kayıt edildi");
+                        page = page + 1;
+                        console.log("film kayıt edildi page =",page);
 
                     }else{
-                        console.log("film gelmedi");
-
+                        page = page + 1;
+                        console.log("film gelmedi page =",page);
                     }
-
+                    getFilmDetail(page);
                     });
-
-                            console.log(movie);
-
-
                 })
                 .catch((err) => {
                     console.log(err);
+                    page = page + 1;
+                    getFilmDetail(page);
                 });
 
 
         }else{
+            if(total_Pages > page){
+                page = page + 1;
+                getFilmDetail(page);
+            }else{
+                console.log("işlem bitti page = ",page);
+            }
 
-            console.log("docs 0 geldi");
+
         }
 
-
-
-
-
-        console.log(result['docs'][0]['sql_Id']);
     });
 
 
