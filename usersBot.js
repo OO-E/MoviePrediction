@@ -22,15 +22,15 @@ request(imdbUrl + start, function (error, response, html) {
 
             var data = $(this);
 
-            // In examining the DOM we notice that the title rests within the first child element of the header tag.
-            // Utilizing jQuery we can easily navigate and get the text by writing the following code:
-
             var id = data.children().first().attr('href');
             var name = data.children().first().text();
 
-            // Once we have our title, we'll store it to the our json object.
             var imdbId = id.split("/");
             console.log(imdbId[2]);
+            var userId = new botIds;
+            userId.id = imdbId[2];
+            userId.name = name;
+            userId.save();
         });
 
     }else{
