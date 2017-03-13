@@ -6,11 +6,12 @@
 
 
 var mongoose = require('mongoose');
-
+mongoose.connect('mongodb://localhost:27017/imdbb');
 var Schema = mongoose.Schema;
 
 var botUserId = new Schema({
-    id: String
+    id: String,
+    name : String
 });
 
 
