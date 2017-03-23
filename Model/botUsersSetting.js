@@ -9,11 +9,11 @@ var mongoose = require('mongoose');
 
 var Schema = mongoose.Schema;
 
-var botUserSchema = new Schema({
-    start: Number
+var botUserSettingsSchema = new Schema({
+    page: Number
 });
 
 
 
 
-module.exports = mongoose.model('botUsersSettings', botUserSchema);
+module.exports = mongoose.model('botUsersSettings', botUserSettingsSchema);
