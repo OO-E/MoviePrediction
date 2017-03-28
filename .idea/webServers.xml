@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="9d5e02e3-bf49-417c-b50b-cd292ada5677" name="Movie Prediction" url="http://54.68.95.93">
+        <fileTransfer host="54.68.95.93" port="21" rootFolder="/nodejs">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" />
+          </advancedOptions>
+          <option name="port" value="21" />
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

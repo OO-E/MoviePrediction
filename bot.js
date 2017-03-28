@@ -108,7 +108,7 @@ var getFilmDetail = function(page){
 
         botFilmSetting.find({},function (err,bot) {
 
-            if(err) throw  err
+            if(err) throw  err;
 
             if(bot.length == 0){
 
@@ -127,9 +127,12 @@ var getFilmDetail = function(page){
         if(result['docs'].length>0){
 
 
-            var id = result["docs"][0]["sql_Id"]
-            const imdb = require('imdb-search');
-            imdb.get(id)
+            var id = result["docs"][0]["sql_Id"];
+
+            console.log("oldumu = ?");
+            var imdb_S = require('imdb-search');
+
+            imdb_S.get(id)
                 .then((movie) => {
 
                 film.find({sql_Id:id},function (err,filmOne) {
