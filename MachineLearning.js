@@ -2,24 +2,36 @@
  * Created by ozgun on 31.03.2017.
  */
 
-var generator = require('knear');
+var limdu = require('limdu');
 
-var k = 3; //k can be any integer
-var machine = new generator.kNear(k);
+var films = require('./Model/filmTwo');
 
-machine.learn([-1,2,3],7);
-machine.learn([0,0,0],8);
-machine.learn([10,10,10],9);
-machine.learn([9,12,9],8);
-
-var y = machine.classify([1,0,1]);
-//returns 'good'
-
-var x = machine.classify([11,11,9]);
-//returns 'bad'
+var birdClassifier = new limdu.classifiers.Winnow({
+    default_positive_weight: 1,
+    default_negative_weight: 1,
+    threshold: 0
+});
 
 
-console.log(x);
-console.log(y);
+var ff = new films();
 
-//bu algoritma çalısıyor.
+films.find({},function (err,docs) {
+
+    if(err) throw  err
+
+    console.log(docs);
+
+
+
+    for (var i = 0, len = docs.length; i < len; i++) {
+
+
+        var ss = docs[i]["imdb_score"];
+        console.log(ss + " - " + i);
+
+    }
+
+});
+
+
+
