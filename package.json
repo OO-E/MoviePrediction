@@ -7,6 +7,7 @@
   },
   "dependencies": {
     "body-parser": "~1.16.0",
+    "brain": "^0.7.0",
     "cheerio": "=0.22.0",
     "cookie-parser": "~1.4.3",
     "curl": "=0.1.4 ",
@@ -19,6 +20,7 @@
     "mongoose": "4.8.5",
     "mongoose-paginate": "5.0.3",
     "morgan": "~1.7.0",
+    "node-mind": "^0.2.1",
     "request": "=2.79.0",
     "serve-favicon": "~2.3.2"
   }
