@@ -7,7 +7,8 @@ mongoose.connect('mongodb://localhost/imdbcsv');
 var brain = require('brain');
 var net = new brain.NeuralNetwork();
 var Schema = mongoose.Schema;
-
+var smr = require('smr');
+var regression = new smr.Regression({ numX: 15});
 
 var filmSchema = new Schema({
 
@@ -63,6 +64,7 @@ Film.find().select(['-_id','num_critic_for_reviews','duration','director_faceboo
 
 function addToTrain(input) {
 
+
     var imdb = input.imdb_score;
     var addedData = {num_critic_for_reviews:input.num_critic_for_reviews
         ,duration : input.duration,
@@ -80,11 +82,29 @@ function addToTrain(input) {
         aspect_ratio: input.aspect_ratio,
         movie_facebook_likes:input.movie_facebook_likes};
     var data = {input : addedData, output : {imdb_raiting: imdb}};
-    array.push(data);
+    var regres = [
+        input.num_critic_for_reviews,
+        input.duration,
+        input.director_facebook_likes,
+        input.actor_3_facebook_likes,
+        input.actor_1_facebook_likes,
+        input.gross,
+        input.num_voted_users,
+        input.cast_total_facebook_likes,
+        input.facenumber_in_poster,
+        input.num_user_for_reviews,
+        input.budget,
+        input.title_year,
+        input.actor_2_facebook_likes,
+        input.aspect_ratio,
+        input.movie_facebook_likes
+    ];
+    regression.push({ x: regres });
+   // array.push(addedData);
 }
 
 function addToBatch(array,input) {
-
+/*
     var data = {num_critic_for_reviews:input.num_critic_for_reviews
         ,duration : input.duration,
         director_facebook_likes:input.director_facebook_likes,
@@ -111,6 +131,9 @@ function addToBatch(array,input) {
 
         var output = net.run(data);
         console.log(output);
+        */
+    var result = regression.calculateCoefficients();
+    console.log(result);
 }
 /*
 
