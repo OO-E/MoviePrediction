@@ -1,16 +1,14 @@
 /**
  * Created by sefasaid on 09/04/2017.
  */
+
 var mongoose = require('mongoose');
 var mongoosePaginate = require('mongoose-paginate');
 mongoose.connect('mongodb://localhost/imdbcsv');
 var Schema = mongoose.Schema;
 
-knn = require('alike');
+nn = require('nearest-neighbor');
 
-options = {
-    k: 10
-}
 var filmSchema = new Schema({
 
     color:{type:String},
@@ -89,7 +87,8 @@ function addToTrain(input) {
 
 function addToBatch(array,input) {
 
-    var data = {num_critic_for_reviews:input.num_critic_for_reviews
+    var data = {
+        num_critic_for_reviews:input.num_critic_for_reviews
         ,duration : input.duration,
         director_facebook_likes:input.director_facebook_likes,
         actor_3_facebook_likes:input.actor_3_facebook_likes,
@@ -105,14 +104,32 @@ function addToBatch(array,input) {
         aspect_ratio: input.aspect_ratio,
         movie_facebook_likes:input.movie_facebook_likes,
         imdb_score: input.imdb_score};
-    var output = knn(data, array, options);
-    var raiting = 0.0;
-    for(var t = 0 ; t < output.length ; t++){
-        raiting += output[t].imdb_score;
-        console.log(output[t].imdb_score);
-        if(t + 1 == output.length){
-            console.log(data.title_year);
-            console.log(raiting/output.length);
-        }
-    }
+
+    var fields = [
+
+        { name: "num_critic_for_reviews", measure: nn.comparisonMethods.number, max: 100 },
+        { name: "duration", measure: nn.comparisonMethods.number, max: 100 },
+        { name: "director_facebook_likes", measure: nn.comparisonMethods.number, max: 100 },
+        { name: "actor_3_facebook_likes", measure: nn.comparisonMethods.number, max: 100 },
+        { name: "actor_1_facebook_likes", measure: nn.comparisonMethods.number, max: 100 },
+        { name: "gross", measure: nn.comparisonMethods.number, max: 100 },
+        { name: "num_voted_users", measure: nn.comparisonMethods.number, max: 100 },
+        { name: "cast_total_facebook_likes", measure: nn.comparisonMethods.number, max: 100 },
+        { name: "facenumber_in_poster", measure: nn.comparisonMethods.number, max: 100 },
+        { name: "num_user_for_reviews", measure: nn.comparisonMethods.number, max: 100 },
+        { name: "budget", measure: nn.comparisonMethods.number, max: 100 },
+        { name: "title_year", measure: nn.comparisonMethods.number, max: 100 },
+        { name: "actor_2_facebook_likes", measure: nn.comparisonMethods.number, max: 100 },
+        { name: "aspect_ratio", measure: nn.comparisonMethods.number, max: 100 },
+        { name: "movie_facebook_likes", measure: nn.comparisonMethods.number, max: 100 },
+        { name: "imdb_score", measure: nn.comparisonMethods.number, max: 100 },
+
+    ];
+
+
+    nn.findMostSimilar(data, array, fields, function(nearestNeighbor, probability) {
+
+        console.log(nearestNeighbor);
+        console.log(probability);
+    });
 }
