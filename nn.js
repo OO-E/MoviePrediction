@@ -1,6 +1,7 @@
 /**
  * Created by sefasaid on 09/04/2017.
  */
+
 var mongoose = require('mongoose');
 var mongoosePaginate = require('mongoose-paginate');
 mongoose.connect('mongodb://localhost/imdbcsv');
@@ -54,11 +55,11 @@ Film.find().select(['-_id','num_critic_for_reviews','duration','director_faceboo
     if(err)
         console.log(err);
     var x = 0;
-    while (x < 5000){
+    while (x < 10){
 
         addToTrain(data[x]);
         x++;
-        if(x == 5000){
+        if(x == 10){
             addToBatch(array,data[x+1]);
         }
     }
@@ -110,10 +111,8 @@ function addToBatch(array,input) {
     });
 
     rf.fit(array, null, "imdb_score", function(err, trees){
-        //console.log(JSON.stringify(trees, null, 4));
-        var pred = rf.predict(data, trees);
 
-        console.log(pred);
+        console.log( rf.predict(data, trees));
 
         // pred = ["virginica", "setosa"]
     });
