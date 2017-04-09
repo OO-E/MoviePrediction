@@ -104,39 +104,30 @@ function addToTrain(input) {
 }
 
 function addToBatch(array,input) {
-/*
-    var data = {num_critic_for_reviews:input.num_critic_for_reviews
-        ,duration : input.duration,
-        director_facebook_likes:input.director_facebook_likes,
-        actor_3_facebook_likes:input.actor_3_facebook_likes,
-        actor_1_facebook_likes: input.actor_1_facebook_likes,
-        gross : input.gross,
-        num_voted_users: input.num_voted_users,
-        cast_total_facebook_likes: input.cast_total_facebook_likes,
-        facenumber_in_poster: input.facenumber_in_poster,
-        num_user_for_reviews : input.num_user_for_reviews,
-        budget: input.budget,
-        title_year : input.title_year,
-        actor_2_facebook_likes : input.actor_2_facebook_likes,
-        aspect_ratio: input.aspect_ratio,
-        movie_facebook_likes:input.movie_facebook_likes};
-        net.train(array,{
-            errorThresh: 0.005,  // error threshold to reach
-            iterations: 100,   // maximum training iterations
-            log: true,           // console.log() progress periodically
-            logPeriod: 10,       // number of iterations between logging
-            learningRate: 0.3    // learning rate
-        });
 
+    var data = [
+        input.num_critic_for_reviews,
+        input.duration,
+        input.director_facebook_likes,
+        input.actor_3_facebook_likes,
+        input.actor_1_facebook_likes,
+        input.gross,
+        input.num_voted_users,
+        input.cast_total_facebook_likes,
+        input.facenumber_in_poster,
+        input.num_user_for_reviews,
+        input.budget,
+        input.title_year,
+        input.actor_2_facebook_likes,
+        input.aspect_ratio,
+        input.movie_facebook_likes
+    ];
 
-        var output = net.run(data);
-        console.log(output);
-        */
     var result = regression.calculateCoefficients();
     console.log(result);
+    var raiting = 0;
+    for(var i = 0 ; i < 14 ; i++){
+        raiting +=  parseFloat(result[i]);
+    }
+    console.log(raiting);
 }
-/*
-
-    console.log(test.classify({ r: 1, g: 0.4, b: 0 }));  // 0.99 - almost white
-
- */
