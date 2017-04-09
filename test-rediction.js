@@ -8,7 +8,7 @@ var brain = require('brain');
 var net = new brain.NeuralNetwork();
 var Schema = mongoose.Schema;
 var smr = require('smr');
-var regression = new smr.Regression({ numX: 15});
+var regression = new smr.Regression({ numX: 15, numY : 1});
 
 var filmSchema = new Schema({
 
@@ -99,7 +99,7 @@ function addToTrain(input) {
         input.aspect_ratio,
         input.movie_facebook_likes
     ];
-    regression.push({ x: regres });
+    regression.push({ x: regres , y :[imdb] });
    // array.push(addedData);
 }
 
