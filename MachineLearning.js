@@ -2,41 +2,52 @@
  * Created by ozgun on 31.03.2017.
  */
 
-var limdu = require('limdu');
-
+var DN2A = require("dn2a");
 var films = require('./Model/filmTwo');
 
-var birdClassifier = new limdu.classifiers.Winnow({
-    default_positive_weight: 1,
-    default_negative_weight: 1,
-    threshold: 0
-});
 
 
 var ff = new films();
-
+var array = [];
 films.find({},function (err,docs) {
 
     if(err) throw  err
-    var xArray = [];
-    console.log("Bağlantı sağladı");
-    for (var i = 0, len = docs.length; i < len; i++) {
-
-
-            var ss = docs[i]["imdb_score"];
-            xArray.push({input: docs[i], output: ss});
-
+    var count = docs.length;
+    for(var i = 1; i < docs.length;i++){
+        array.push({input:docs[i],output:docs[i]["imdb_score"]});
     }
-    console.log("Bağlantı 1",xArray.length);
-    var colorClassifier = new limdu.classifiers.NeuralNetwork();
-    colorClassifier.trainBatch(xArray);
 
-    console.log(colorClassifier.classify({input:docs[0],output:docs[0]["imdb_score"]}));
+    console.log("sayı =",array.length);
+    console.log("tahmin edilen data ",docs[0]["imdb_score"]);
 
+    neuralNetwork(array,docs[0]);
 });
 
 
 
 
 
+function neuralNetwork(trainingData,predicateData){
+    // Instantiation
+    var neuralNetwork = new DN2A.NetworkAlpha();
+
+// Training
+    var trainingPatterns = [
+       trainingData
+    ];
+    neuralNetwork.train(trainingPatterns);
+
+// Querying
+    var inputPatterns = [
+        predicateData
+    ];
+    neuralNetwork.query(inputPatterns, function(queryingStatus) {
+        inputPatterns.forEach(function(inputPatten, inputPatternIndex) {
+            console.log("[" + inputPatterns[inputPatternIndex].join(", ") + "] => [" + queryingStatus.outputPatterns[inputPatternIndex].join(", ") + "]");
+        });
+    });
+
+
+
+}
 
