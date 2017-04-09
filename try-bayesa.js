@@ -1,10 +1,7 @@
 /**
  * Created by sefasaid on 09/04/2017.
  */
-var bayes = require('bayes')
-
-var classifier = bayes()
-
+var dclassify = require('dclassify');
 var mongoose = require('mongoose');
 var mongoosePaginate = require('mongoose-paginate');
 mongoose.connect('mongodb://localhost/imdbcsv');
