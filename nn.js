@@ -8,9 +8,9 @@ var Schema = mongoose.Schema;
 
 knn = require('alike');
 
-options = {
-    k: 10
-}
+var fs = require('fs'),
+    RandomForestClassifier = require('random-forest-classifier').RandomForestClassifier;
+
 var filmSchema = new Schema({
 
     color:{type:String},
@@ -104,15 +104,17 @@ function addToBatch(array,input) {
         actor_2_facebook_likes : input.actor_2_facebook_likes,
         aspect_ratio: input.aspect_ratio,
         movie_facebook_likes:input.movie_facebook_likes,
-        imdb_score: input.imdb_score};
-    var output = knn(data, array, options);
-    var raiting = 0.0;
-    for(var t = 0 ; t < output.length ; t++){
-        raiting += output[t].imdb_score;
-        console.log(output[t].imdb_score);
-        if(t + 1 == output.length){
-            console.log(data.title_year);
-            console.log(raiting/output.length);
-        }
-    }
+        };
+    var rf = new RandomForestClassifier({
+        n_estimators: 10
+    });
+
+    rf.fit(array, null, "imdb_score", function(err, trees){
+        //console.log(JSON.stringify(trees, null, 4));
+        var pred = rf.predict(data, trees);
+
+        console.log(pred);
+
+        // pred = ["virginica", "setosa"]
+    });
 }

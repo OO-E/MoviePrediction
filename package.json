@@ -19,6 +19,7 @@
     "mongoose": "4.8.5",
     "mongoose-paginate": "5.0.3",
     "morgan": "~1.7.0",
+    "random-forest-classifier": "^0.6.0",
     "request": "=2.79.0",
     "serve-favicon": "~2.3.2"
   }
