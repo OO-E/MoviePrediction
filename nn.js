@@ -48,18 +48,18 @@ filmSchema.plugin(mongoosePaginate);
 var array = [];
 
 var Film = mongoose.model('denemee', filmSchema);
-Film.find().select(['-_id','num_critic_for_reviews','duration','director_facebook_likes'
+Film.find().select(['num_critic_for_reviews','duration','director_facebook_likes'
     ,'actor_3_facebook_likes','actor_1_facebook_likes','gross','num_voted_users','cast_total_facebook_likes'
     ,'facenumber_in_poster','num_user_for_reviews','budget','title_year','actor_2_facebook_likes',
     'aspect_ratio','imdb_score','movie_facebook_likes']).exec(function (err,data) {
     if(err)
         console.log(err);
     var x = 0;
-    while (x < 10){
+    while (x < 100){
 
         addToTrain(data[x]);
         x++;
-        if(x == 10){
+        if(x == 100){
             addToBatch(array,data[x+1]);
         }
     }
@@ -68,7 +68,8 @@ Film.find().select(['-_id','num_critic_for_reviews','duration','director_faceboo
 function addToTrain(input) {
 
     var imdb = input.imdb_score;
-    var addedData = {num_critic_for_reviews:input.num_critic_for_reviews
+    var addedData = {
+        num_critic_for_reviews:input.num_critic_for_reviews
         ,duration : input.duration,
         director_facebook_likes:input.director_facebook_likes,
         actor_3_facebook_likes:input.actor_3_facebook_likes,
@@ -90,7 +91,7 @@ function addToTrain(input) {
 
 function addToBatch(array,input) {
 
-    var data = {num_critic_for_reviews:input.num_critic_for_reviews
+    var data = [{num_critic_for_reviews:input.num_critic_for_reviews
         ,duration : input.duration,
         director_facebook_likes:input.director_facebook_likes,
         actor_3_facebook_likes:input.actor_3_facebook_likes,
@@ -105,10 +106,11 @@ function addToBatch(array,input) {
         actor_2_facebook_likes : input.actor_2_facebook_likes,
         aspect_ratio: input.aspect_ratio,
         movie_facebook_likes:input.movie_facebook_likes,
-        };
+        }];
     var rf = new RandomForestClassifier({
-        n_estimators: 10
+        n_estimators: 4
     });
+    console.log(input._id);
 
     rf.fit(array, null, "imdb_score", function(err, trees){
 
@@ -117,3 +119,4 @@ function addToBatch(array,input) {
         // pred = ["virginica", "setosa"]
     });
 }
+
