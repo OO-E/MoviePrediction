@@ -9,6 +9,7 @@ var Schema = mongoose.Schema;
 knn = require('alike');
 
 options = {
+    k: 10
 }
 var filmSchema = new Schema({
 
@@ -53,10 +54,11 @@ Film.find().select(['-_id','num_critic_for_reviews','duration','director_faceboo
     if(err)
         console.log(err);
     var x = 0;
-    while (x < 3){
+    while (x < 5000){
+
         addToTrain(data[x]);
         x++;
-        if(x == 3){
+        if(x == 5000){
             addToBatch(array,data[x+1]);
         }
     }
@@ -79,7 +81,8 @@ function addToTrain(input) {
         title_year : input.title_year,
         actor_2_facebook_likes : input.actor_2_facebook_likes,
         aspect_ratio: input.aspect_ratio,
-        movie_facebook_likes:input.movie_facebook_likes};
+        movie_facebook_likes:input.movie_facebook_likes,
+        imdb_score: input.imdb_score};
 
     array.push(addedData);
 }
@@ -100,6 +103,16 @@ function addToBatch(array,input) {
         title_year : input.title_year,
         actor_2_facebook_likes : input.actor_2_facebook_likes,
         aspect_ratio: input.aspect_ratio,
-        movie_facebook_likes:input.movie_facebook_likes};
-    console.log(knn(data, array, options));
+        movie_facebook_likes:input.movie_facebook_likes,
+        imdb_score: input.imdb_score};
+    var output = knn(data, array, options);
+    var raiting = 0.0;
+    for(var t = 0 ; t < output.length ; t++){
+        raiting += output[t].imdb_score;
+        console.log(output[t].imdb_score);
+        if(t + 1 == output.length){
+            console.log(data.title_year);
+            console.log(raiting/output.length);
+        }
+    }
 }
