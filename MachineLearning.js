@@ -18,20 +18,25 @@ var ff = new films();
 films.find({},function (err,docs) {
 
     if(err) throw  err
-
-    console.log(docs);
-
-
-
+    var xArray = [];
+    console.log("Bağlantı sağladı");
     for (var i = 0, len = docs.length; i < len; i++) {
 
 
-        var ss = docs[i]["imdb_score"];
-        console.log(ss + " - " + i);
+            var ss = docs[i]["imdb_score"];
+            xArray.push({input: docs[i], output: ss});
 
     }
+    console.log("Bağlantı 1",xArray.length);
+    var colorClassifier = new limdu.classifiers.NeuralNetwork();
+    colorClassifier.trainBatch(xArray);
+
+    console.log(colorClassifier.classify({input:docs[0],output:docs[0]["imdb_score"]}));
 
 });
+
+
+
 
 
 
