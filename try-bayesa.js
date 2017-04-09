@@ -1,7 +1,7 @@
 /**
  * Created by sefasaid on 09/04/2017.
  */
-var dclassify = require('dclassify');
+
 var mongoose = require('mongoose');
 var mongoosePaginate = require('mongoose-paginate');
 mongoose.connect('mongodb://localhost/imdbcsv');
@@ -41,7 +41,13 @@ var filmSchema = new Schema({
 }, { timestamps: { createdAt: 'created_at', updatedAt : 'updated_at' } });
 filmSchema.plugin(mongoosePaginate);
 var array = [];
+var dclassify = require('dclassify');
 
+// Utilities provided by dclassify
+var Classifier = dclassify.Classifier;
+var DataSet    = dclassify.DataSet;
+var Document   = dclassify.Document;
+var data = new DataSet();
 var Film = mongoose.model('denemee', filmSchema);
 Film.find().select(['-_id','num_critic_for_reviews','duration','director_facebook_likes'
     ,'actor_3_facebook_likes','actor_1_facebook_likes','gross','num_voted_users','cast_total_facebook_likes'
@@ -51,7 +57,7 @@ Film.find().select(['-_id','num_critic_for_reviews','duration','director_faceboo
         console.log(err);
     var x = 0;
     while (x < 3){
-        addToTrain(data[x]);
+        addToTrain(data[x],x);
         x++;
         if(x == 3){
             addToBatch(array,data[x+1]);
@@ -59,7 +65,7 @@ Film.find().select(['-_id','num_critic_for_reviews','duration','director_faceboo
     }
 });
 
-function addToTrain(input) {
+function addToTrain(input,name) {
 
 
     var imdb = input.imdb_score;
@@ -81,8 +87,9 @@ function addToTrain(input) {
         input.aspect_ratio,
         input.movie_facebook_likes
     ];
-    classifier.learn(learn, imdb);
-    // array.push(addedData);
+    var item1 = new Document(name, learn);
+    data.add(imdb,  [item1, item2, item3]);
+
 }
 
 function addToBatch(array,input) {
