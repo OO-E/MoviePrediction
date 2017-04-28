@@ -55,11 +55,11 @@ Film.find().select(['num_critic_for_reviews','duration','director_facebook_likes
     if(err)
         console.log(err);
     var x = 0;
-    while (x < 100){
+    while (x < 1000){
 
         addToTrain(data[x]);
         x++;
-        if(x == 100){
+        if(x == 1000){
             addToBatch(array,data[x+1]);
         }
     }
